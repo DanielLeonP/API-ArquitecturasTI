@@ -1,3 +1,4 @@
+const Mascota = require('../models/mascota');
 const Role = require('../models/role');
 const User = require("../models/user");
 
@@ -18,12 +19,19 @@ const emailExiste = async (correo = '') => {
 const existeUsuarioPorId = async (id) => {
     const existeUsuario = await User.findById(id);
     if (!existeUsuario) {
-        throw new Error(`El id '${correo}' no existe`);
+        throw new Error(`El id '${id}' no existe`);
+    }
+}
+const existeMascotaPorId = async (id) => {
+    const existeMascota = await Mascota.findById(id);
+    if (!existeMascota) {
+        throw new Error(`El id '${id}' de mascota no existe`);
     }
 }
 
 module.exports = {
     esRoleValido,
     emailExiste,
-    existeUsuarioPorId
+    existeUsuarioPorId,
+    existeMascotaPorId
 };

@@ -6,10 +6,10 @@ const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db
 const validarCampos = require('../midlewares/validar-campos');
 const { esAdminRole, tieneRole } = require('../midlewares/validar-roles');
 const { validarJWT } = require('../midlewares/validarJWT');
-// const { validarCampos, esAdminRole, tieneRole, validarJWT } = require('../midlewares');
 
 const router = Router();
 
+// REGISTRAR USUARIO
 router.post('/',
     [
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),

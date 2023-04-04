@@ -5,6 +5,7 @@ const validarCampos = require('../midlewares/validar-campos');
 
 const router = Router();
 
+// LOGIN - OBTENER TOKEN
 router.post('/login',
     [
         check('correo', ' EL correo es obligatorio').isEmail(),
