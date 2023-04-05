@@ -11,6 +11,7 @@ class Server {
         this.authPath = '/api/auth';
         this.mascotaPath = '/api/mascota';
         this.examenPath = '/api/examen';
+        this.reportePath = '/api/reporte';
         //DB Conection
         this.conectarDB();
         // Midlewares
@@ -35,6 +36,7 @@ class Server {
         this.app.use(this.usuariosPath, require('../routes/user'));
         this.app.use(this.mascotaPath, require('../routes/mascota'));
         this.app.use(this.examenPath, require('../routes/examen'));
+        this.app.use(this.reportePath, require('../routes/reporte'));
     }
     listen() {
         this.app.listen(this.port, () => {

@@ -5,13 +5,22 @@ const ExamenSchema = Schema({
         type: String,
         required: [true, 'El idExamen es obligatorio']
     },
-    fechaRealizado: {
+    estado: {
+        type: String,
+        required: [true, 'El estado es obligatorio'],
+        default: 'Pendiente'
+    },
+    fechaSolicitud: {
         type: Date,
         required: [true, 'La fecha es obligatoria'],
+        default: Date.now
     },
-    datoPrueba: {
+    fechaRealizado: {
+        type: Date
+    },
+    datos: {
         type: String,
-        required: [true, 'El dato es obligatorio']
+        defatult: ''
     },
     idMascota: {
         type: Schema.Types.ObjectId,
