@@ -18,8 +18,12 @@ const ExamenSchema = Schema({
     fechaRealizado: {
         type: Date
     },
-    datos: {
+    tipoExamen: {
         type: String,
+        required: [true, 'El tipo de examen es obligatorio']
+    },
+    datos: {
+        type: Object,
         defatult: ''
     },
     idMascota: {

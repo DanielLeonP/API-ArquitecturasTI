@@ -8,6 +8,12 @@ const ReporteGet = async (req = request, res = response) => {
         Examen.find()//Se pueden enviar condiciones
     ]);
 
+
+
+    // AQUI SE REALIZA LA TABLA O PDF
+
+
+
     res.status(200);
     res.json({ 'msg': 'GET generar reporte', total, examenes });
 }

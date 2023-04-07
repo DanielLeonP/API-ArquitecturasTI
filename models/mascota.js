@@ -8,9 +8,29 @@ const MascotaSchema = Schema({
         type: String,
         required: [true, 'El nombre es obligatorio']
     },
-    tipo: {
+    especie: {
         type: String,
         required: [true, 'El tipo es obligatorio'],
+    },
+    raza: {
+        type: String,
+        required: [true, 'La raza es obligatoria'],
+    },
+    sexo: {
+        type: String,
+        required: [true, 'El sexo es obligatorio'],
+    },
+    MVZ: {
+        type: String,
+        required: [true, 'El MVZ es obligatorio'],
+    },
+    edad: {
+        type: Number,
+        required: [true, 'La edad es obligatoria'],
+    },
+    castrado: {
+        type: String,
+        required: [true, 'Si es o no castrado es obligatorio'],
     },
     idUsuario: {        
         type: Schema.Types.ObjectId,

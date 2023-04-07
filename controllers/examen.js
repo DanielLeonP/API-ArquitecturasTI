@@ -3,11 +3,11 @@ const Examen = require('../models/examen');
 
 const ExamenPost = async (req = request, res = response) => {
 
-    const { idMascota } = req.body;
+    const { idMascota, tipoExamen } = req.body;
 
-    const idExamen = "IDEXAMENPRUEBA";
+    const idExamen = "IDEXAMENPRUEBA"; //CAMBIAR A FORMATO QUE DIJO EL PROFE
 
-    const examen = new Examen({ idExamen, idMascota });
+    const examen = new Examen({ idExamen, idMascota, tipoExamen });
 
     // Guardar en DB
     await examen.save();//Almacena el usuario en la BD
@@ -54,13 +54,17 @@ const ExamenesGet = async (req = request, res = response) => {
 }
 
 const ExamenPut = async (req = request, res = response) => {
-    const { datos } = req.body;
+    let { datos } = req.body;
     const { id } = req.params;
     const fechaRealizado = new Date();
 
 
     const examen = await Examen.findByIdAndUpdate(id, { datos, fechaRealizado, estado: 'Completado' }, { new: true });
 
+    if (!examen) {
+        res.status(204).json({ 'msg': 'El examen no fue encontrado' });
+        return;
+    }
     res.status(201);
     res.json({ 'msg': 'PUT Examen de mascota', examen });
 }

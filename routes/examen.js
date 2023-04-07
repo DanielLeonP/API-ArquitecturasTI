@@ -14,6 +14,7 @@ router.post('/',
         // validarJWT,
         check('idMascota', 'El idMascota es obligatorio').not().isEmpty(),
         check('idMascota', 'idMascota no es un ID válido').isMongoId(),
+        check('tipoExamen', 'El tipoExamen es obligatorio').not().isEmpty(),
         validarCampos
     ]
     , ExamenPost);
@@ -42,7 +43,7 @@ router.get('/listado/:estado', //Pendiente o Completado
 router.put('/:id', //Pendiente o Completado
     [
         // Validar que es veterinario
-        check('datos', 'El dato es obligatorio').not().isEmpty(),
+        check('datos', 'Los datos son obligatorios').not().isEmpty(),
         validarCampos
     ]
     , ExamenPut);

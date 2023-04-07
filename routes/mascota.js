@@ -14,8 +14,13 @@ router.post('/',
     [
         // validarJWT,
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-        check('tipo', 'El tipo es obligatorio').not().isEmpty(),
         check('idUsuario').custom(existeUsuarioPorId),
+        check('especie', 'El especie es obligatorio').not().isEmpty(),
+        check('raza', 'El raza es obligatorio').not().isEmpty(),
+        check('sexo', 'El sexo es obligatorio').not().isEmpty(),
+        check('MVZ', 'El MVZ es obligatorio').not().isEmpty(),
+        check('edad', 'El edad es obligatorio').not().isEmpty(),
+        check('castrado', 'El castrado es obligatorio').not().isEmpty(),
         validarCampos
     ],
     MascotaPost);

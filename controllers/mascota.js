@@ -3,9 +3,9 @@ const Mascota = require('../models/mascota');
 
 const MascotaPost = async (req = request, res = response) => {
 
-    const { nombre, tipo, idUsuario } = req.body;
+    const { nombre, idUsuario, especie, raza, sexo, MVZ, edad, castrado } = req.body;
     const fechaRegistro = Date.now()
-    const mascota = new Mascota({ fechaRegistro, nombre, tipo, idUsuario });
+    const mascota = new Mascota({ fechaRegistro, nombre, idUsuario, especie, raza, sexo, MVZ, edad, castrado });
 
     // Guardar en DB
     await mascota.save();//Almacena el usuario en la BD
