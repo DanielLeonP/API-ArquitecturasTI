@@ -10,6 +10,10 @@ const ExamenSchema = Schema({
         required: [true, 'El estado es obligatorio'],
         default: 'Pendiente'
     },
+    estado: {
+        type: String,
+        default: 'Pendiente'
+    },
     fechaSolicitud: {
         type: Date,
         required: [true, 'La fecha es obligatoria'],

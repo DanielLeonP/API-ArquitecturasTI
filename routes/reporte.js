@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 
 const validarCampos = require('../midlewares/validar-campos');
 const { validarJWT } = require('../midlewares/validarJWT');
-const { ReporteGet } = require('../controllers/reporte');
+const { ReporteGet, EnviarMailGet } = require('../controllers/reporte');
 
 const router = Router();
 
@@ -16,5 +16,13 @@ router.get('/', //Pendiente o Completado
         // validarCampos
     ]
     , ReporteGet);
+
+router.get('/enviarCorreo/', //Pendiente o Completado
+    [
+        // Validar que es veterinario
+        check('correo', 'El correo es obligatorio').not().isEmpty(),//.isEmail(),
+        validarCampos
+    ]
+    , EnviarMailGet);
 
 module.exports = router;
