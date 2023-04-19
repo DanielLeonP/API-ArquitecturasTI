@@ -32,7 +32,7 @@ const EnviarMailGet = async (req = request, res = response) => {
     const ruta =  `../files/${fileName}`//path.join(__dirname, `../files/${fileName}`);
     // console.log(ruta)
     if (!fs.existsSync(ruta)) {
-        res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO' });
+        res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO', ruta });
         return;
     }
 
