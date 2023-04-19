@@ -23,13 +23,13 @@ const ReporteGet = async (req = request, res = response) => {
 
 
 const EnviarMailGet = async (req = request, res = response) => {
-    
+
     const { correo } = req.body;
 
 
     // AQUI SE REALIZA BUSQUEDA DEL DE PDF
     const fileName = 'prueba.pdf'
-    const ruta =  `../files/${fileName}`//path.join(__dirname, `../files/${fileName}`);
+    const ruta = path.join(__dirname, `../files/${fileName}`); //`../files/${fileName}`//
     // console.log(ruta)
     if (!fs.existsSync(ruta)) {
         res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO', ruta });
