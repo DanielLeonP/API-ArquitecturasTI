@@ -32,7 +32,7 @@ const EnviarMailGet = async (req = request, res = response) => {
     const ruta =  `../files/${fileName}`//path.join(__dirname, `../files/${fileName}`);
     // console.log(ruta)
     if (!fs.existsSync(ruta)) {
-        res.status(204).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO' });
+        res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO' });
         return;
     }
 
@@ -69,7 +69,7 @@ const EnviarMailGet = async (req = request, res = response) => {
     };
     transporter.sendMail(mail_options, (error, info) => {
         if (error) {
-            res.status(204);
+            res.status(200);
             res.json({ 'msg': 'ERROR EN EL SERVIDOR', error });
         } else {
             res.status(200);
