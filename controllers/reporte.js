@@ -29,6 +29,7 @@ const EnviarMailGet = async (req = request, res = response) => {
 
     // AQUI SE REALIZA BUSQUEDA DEL DE PDF
     const fileName = 'prueba.pdf'
+    
     const ruta = path.join(__dirname, `../files/${fileName}`); //`../files/${fileName}`//
     // console.log(ruta)
     if (!fs.existsSync(ruta)) {
