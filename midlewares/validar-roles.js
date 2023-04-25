@@ -11,6 +11,17 @@ const esAdminRole = (req = request, res = response, next) => {
     }
     next();
 }
+const esVeterinario = (req = request, res = response, next) => {
+    if (!req.user) {
+        return res.status(500).json({ msg: 'Se quiere verificar el role sin validar el token primero' });
+    }
+
+    const { rol, nombre } = req.user;
+    if (rol !== 'VETERINARIO_ROLE') {
+        return res.status(401).json({ msg: `${nombre} no es VETERINARIO_ROLE - No puede hacer esto` });
+    }
+    next();
+}
 const tieneRole = (...roles) => { //Operador rest (...)
     return (req = request, res = response, next) => {
         if (!req.user) {
@@ -25,5 +36,6 @@ const tieneRole = (...roles) => { //Operador rest (...)
 }
 module.exports = {
     esAdminRole,
-    tieneRole
+    tieneRole,
+    esVeterinario
 }

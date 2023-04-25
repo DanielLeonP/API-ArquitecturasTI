@@ -12,9 +12,8 @@ const router = Router();
 // REGISTRAR MASCOTA
 router.post('/',
     [
-        // validarJWT,
+        validarJWT,
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-        check('idUsuario').custom(existeUsuarioPorId),
         check('especie', 'El especie es obligatorio').not().isEmpty(),
         check('raza', 'El raza es obligatorio').not().isEmpty(),
         check('sexo', 'El sexo es obligatorio').not().isEmpty(),
@@ -26,19 +25,18 @@ router.post('/',
     MascotaPost);
 
 // OBTENER UNA MASCOTA POR ID
-router.get('/:id',
+router.get('/id/:id',
     [
-        // validarJWT,
+        validarJWT,
         check('id').custom(existeMascotaPorId),
         validarCampos
     ],
     MascotaGet);
 
 // OBTENER MASCOTAS DE UN USAURIO
-router.get('/Usuario/:id',
+router.get('/usuario/',
     [
-        // validarJWT,
-        check('id').custom(existeUsuarioPorId),
+        validarJWT,
         validarCampos
     ],
     MascotasByUserGet);

@@ -13,8 +13,7 @@ const ReporteGet = async (req = request, res = response) => {
 
 
 
-    // AQUI SE REALIZA LA TABLA O PDF
-
+    /*AQUI SE REALIZA LA TABLA DONDE CONTIENE TODOS Y CADA UNO DE LOS EXAMENES REALIZADOS*/
 
 
     res.status(200);
@@ -28,18 +27,16 @@ const EnviarMailGet = async (req = request, res = response) => {
 
 
     // AQUI SE REALIZA BUSQUEDA DEL DE PDF
+    /* GENERAR UNA FORMA DE OBTENER EL NOMBRE DEL ARCHIVO PARA ENVIARLO AL USUARIO, PARA PRUEBAS ESTA EL SIG ARCHIVO:*/
     const fileName = 'prueba.pdf'
-    
-    const ruta = path.join(__dirname, `../files/${fileName}`); //`../files/${fileName}`//
-    // console.log(ruta)
+
+    const ruta = path.join(__dirname, `../files/${fileName}`);
     if (!fs.existsSync(ruta)) {
         res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO', ruta });
         return;
     }
 
     // ENVIAR ARCHIVO
-    // const correo = 'laxterdos@gmail.com';
-
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -68,6 +65,7 @@ const EnviarMailGet = async (req = request, res = response) => {
             }
         ]
     };
+    
     transporter.sendMail(mail_options, (error, info) => {
         if (error) {
             res.status(200);
