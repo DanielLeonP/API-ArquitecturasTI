@@ -54,7 +54,7 @@ const mailOptionsForDynamicMail = async (correo, fileName, ruta) => {
         attachments: [
             {
                 filename: fileName,
-                content: `../files/${fileName}`,//ruta,
+                content: path.join(__dirname, `../files/${fileName}`),//ruta,
                 contentType: 'application/pdf'
                 // href: ruta
             }
