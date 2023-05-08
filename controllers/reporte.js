@@ -61,7 +61,8 @@ const EnviarMailGet = async (req = request, res = response) => {
         attachments: [
             {
                 filename: fileName,
-                content: ruta
+                content: ruta,
+                encoding: 'base64'
             }
         ]
     };
