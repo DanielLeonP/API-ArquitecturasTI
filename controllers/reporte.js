@@ -37,7 +37,7 @@ const sendEmailWithPromiseWithDynamicData = async (correo, fileName, ruta) => {
     });
 }
 const mailOptionsForDynamicMail = async (correo, fileName, ruta) => {
-    const data = fs.readFileSync(ruta, 'utf8');
+    const data = await fs.readFileSync(ruta, 'utf8');
     return {
         from: 'Sistema de consulta de mascotas',
         to: correo,
