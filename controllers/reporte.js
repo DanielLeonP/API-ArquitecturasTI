@@ -111,6 +111,7 @@ const EnviarMailGet = async (req = request, res = response) => {
     const fileName = 'prueba.pdf'
 
     const ruta = path.join(__dirname, `../files/${fileName}`);
+    console.log(ruta);
     if (!fs.existsSync(ruta)) {
         res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO', ruta });
         return;
