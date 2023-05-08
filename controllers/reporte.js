@@ -37,6 +37,7 @@ const sendEmailWithPromiseWithDynamicData = async (correo, fileName, ruta) => {
     });
 }
 const mailOptionsForDynamicMail = async (correo, fileName, ruta) => {
+    const data = fs.readFileSync(ruta, 'utf8');
     return {
         from: 'Sistema de consulta de mascotas',
         to: correo,
@@ -54,7 +55,7 @@ const mailOptionsForDynamicMail = async (correo, fileName, ruta) => {
         attachments: [
             {
                 filename: fileName,
-                content: 'http://www.axmag.com/download/pdfurl-guide.pdf',//ruta,
+                content: data,//'http://www.axmag.com/download/pdfurl-guide.pdf',//ruta,
                 contentType: 'application/pdf'
                 // href: ruta
             }
