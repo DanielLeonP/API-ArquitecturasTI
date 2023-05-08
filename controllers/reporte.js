@@ -109,13 +109,16 @@ const EnviarMailGet = async (req = request, res = response) => {
     // AQUI SE REALIZA BUSQUEDA DEL DE PDF
     /* GENERAR UNA FORMA DE OBTENER EL NOMBRE DEL ARCHIVO PARA ENVIARLO AL USUARIO, PARA PRUEBAS ESTA EL SIG ARCHIVO:*/
     const fileName = 'prueba.pdf'
+    const ruta = path.join(process.cwd(), `../files/${fileName}`);
 
-    const ruta = path.join(__dirname, `../files/${fileName}`);
-    console.log(ruta);
+    // const ruta = path.join(__dirname, `../files/${fileName}`);
     if (!fs.existsSync(ruta)) {
         res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO', ruta });
         return;
     }
+
+
+    console.log(ruta);
     const datos = await sendEmailWithPromiseWithDynamicData(correo, fileName, ruta);
     res.status(200);
     res.json({ 'msg': 'Correo enviado Correctamente', datos });
