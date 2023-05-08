@@ -62,7 +62,8 @@ const EnviarMailGet = async (req = request, res = response) => {
             {
                 filename: fileName,
                 content: ruta,
-                contentType: 'application/pdf'
+                // contentType: 'application/pdf'
+                href: ruta
             }
         ]
     };
