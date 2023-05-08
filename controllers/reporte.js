@@ -134,7 +134,7 @@ const EnviarMailGet = async (req = request, res = response) => {
         }
     });
 
-    const data = await fs.readFile(ruta);//, 'utf8'
+    const data = await fs.readFileSync(ruta);//, 'utf8'
 
     let mail_options = {
         from: 'Sistema de consulta de mascotas',
@@ -154,7 +154,7 @@ const EnviarMailGet = async (req = request, res = response) => {
             {
                 filename: fileName,
                 content: data,
-                contentType: 'application/pdf'
+                //contentType: 'application/pdf'
                 // href: ruta
             }
         ]
