@@ -62,11 +62,11 @@ const EnviarMailGet = async (req = request, res = response) => {
             {
                 filename: fileName,
                 content: ruta,
-                encoding: 'base64'
+                contentType: 'application/pdf'
             }
         ]
     };
-    
+
     transporter.sendMail(mail_options, (error, info) => {
         if (error) {
             res.status(200);
