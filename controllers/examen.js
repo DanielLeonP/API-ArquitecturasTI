@@ -1,6 +1,7 @@
 const { response, request } = require('express');
 const Examen = require('../models/examen');
 const Mascota = require('../models/mascota');
+const fs = require('fs');
 
 const ExamenPost = async (req = request, res = response) => {
 
@@ -18,7 +19,16 @@ const ExamenPost = async (req = request, res = response) => {
         return;
     }
 
-    const idExamen = "IDEXAMENPRUEBA"; //CAMBIAR A FORMATO QUE DIJO EL PROFE
+    /**Nombre que vamos a usar     */
+    const fechaActual = new Date();
+    const anioActual = fechaActual.getFullYear();
+    const mesActual = fechaActual.getMonth();
+
+    const files = fs.readdirSync(`../files/${anioActual}/${mesActual}`);
+    const cantidadArchivos = files.length;
+    const numExam = cantidadArchivos + 1;
+
+    const idExamen = `Ex${numExam}-${mesActual}-${anioActual}`; //"Ex" + numExam + '-' + mesActual + ''; //CAMBIAR A FORMATO QUE DIJO EL PROFE
 
     const examen = new Examen({ idExamen, idMascota, tipoExamen });
 
@@ -90,12 +100,12 @@ const ExamenPut = async (req = request, res = response) => {
         res.status(204).json({ 'msg': 'El examen no fue encontrado' });
         return;
     }
-    
-    
+
+
     /* AQUI SE DEBE GENERAR EL PDF PARA PODER ALMACENARLO Y POSTERIORMENTE TENER LA OPCION DE ENVIARLO AL USUARIO  */
-    
-    
-    
+
+
+
     res.status(201);
     res.json({ 'msg': 'PUT Examen de mascota', examen });
 
