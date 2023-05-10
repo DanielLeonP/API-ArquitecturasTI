@@ -2,8 +2,8 @@ const { Schema, model } = require('mongoose');
 
 const ExamenSchema = Schema({
     idExamen: {
-        type: String,
-        required: [true, 'El idExamen es obligatorio']
+        type: String//,
+        // required: [true, 'El idExamen es obligatorio']
     },
     estado: {
         type: String,

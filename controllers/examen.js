@@ -1,7 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+const PDFDocument = require('pdfkit');
+
 const { response, request } = require('express');
 const Examen = require('../models/examen');
 const Mascota = require('../models/mascota');
-const fs = require('fs');
 
 const ExamenPost = async (req = request, res = response) => {
 
@@ -19,20 +22,8 @@ const ExamenPost = async (req = request, res = response) => {
         return;
     }
 
-    /**Nombre que vamos a usar     */
-    const fechaActual = new Date();
-    const anioActual = fechaActual.getFullYear();
-    const mesActual = fechaActual.getMonth();
-
-    const files = fs.readdirSync(`../files/${anioActual}/${mesActual}`);
-    const cantidadArchivos = files.length;
-    const numExam = cantidadArchivos + 1;
-
-    const idExamen = `Ex${numExam}-${mesActual}-${anioActual}`; //"Ex" + numExam + '-' + mesActual + ''; //CAMBIAR A FORMATO QUE DIJO EL PROFE
-
-    const examen = new Examen({ idExamen, idMascota, tipoExamen });
-
     // Guardar en DB
+    const examen = new Examen({ idMascota, tipoExamen });//idExamen,
     await examen.save();//Almacena el usuario en la BD
 
     res.status(201);
@@ -93,18 +84,51 @@ const ExamenPut = async (req = request, res = response) => {
     const { id } = req.params;
     const fechaRealizado = new Date();
 
+    /* AQUI SE DEBE GENERAR EL PDF PARA PODER ALMACENARLO Y POSTERIORMENTE TENER LA OPCION DE ENVIARLO AL USUARIO  */
 
-    const examen = await Examen.findByIdAndUpdate(id, { datos, fechaRealizado, estado: 'Completado' }, { new: true });
+    /**Nombre que vamos a usar para el archivo*/
+    const fechaActual = new Date();
+    const anioActual = fechaActual.getFullYear();
+    const mesActual = fechaActual.getMonth();
 
+    const carpetaAnio = path.join(__dirname, `../files/${anioActual}`);
+    const carpetaMes = path.join(__dirname, `../files/${anioActual}/${mesActual}`);
+    if (!fs.existsSync(carpetaAnio)) {
+        fs.mkdirSync(carpetaAnio);
+    }
+    if (!fs.existsSync(carpetaMes)) {
+        fs.mkdirSync(carpetaMes);
+    }
+
+    const files = fs.readdirSync(carpetaMes);
+    const cantidadArchivos = files.length;
+    const numExam = cantidadArchivos + 1;
+
+    const idExamen = `Ex${numExam}-${mesActual}-${anioActual}`;
+
+    /* Verifica que el examen no se encuentre en un estado completado */
+    const estadoExamen = await Examen.findById(id);
+    console.log(estadoExamen)
+    if (estadoExamen.estado == 'Completado') {
+        return res.status(200).json({ msg: `El examen con id ${id} ya ha sido completado el ${estadoExamen.fechaRealizado}` });
+    }
+
+
+    /* Si el examen no esta completado, Busca el examen y ve si existe */
+    const examen = await Examen.findByIdAndUpdate(id, { idExamen, datos, fechaRealizado, estado: 'Completado' }, { new: true });
     if (!examen) {
         res.status(204).json({ 'msg': 'El examen no fue encontrado' });
         return;
     }
 
+    /* SI EXISTE, CONTINUA... */
 
-    /* AQUI SE DEBE GENERAR EL PDF PARA PODER ALMACENARLO Y POSTERIORMENTE TENER LA OPCION DE ENVIARLO AL USUARIO  */
-
-
+    /* GENERAR PDF */
+    const doc = new PDFDocument();
+    doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
+    doc.fontSize(12);
+    doc.text(`El examen contiene el id ${idExamen}`);
+    doc.end();
 
     res.status(201);
     res.json({ 'msg': 'PUT Examen de mascota', examen });

@@ -21,19 +21,30 @@ const ReporteGet = async (req = request, res = response) => {
 }
 
 const EnviarMailGet = async (req = request, res = response) => {
-
-    const { correo } = req.body;
-
+    const { correo, id } = req.body;
 
     // AQUI SE REALIZA BUSQUEDA DEL DE PDF
-    /* GENERAR UNA FORMA DE OBTENER EL NOMBRE DEL ARCHIVO PARA ENVIARLO AL USUARIO, PARA PRUEBAS ESTA EL SIG ARCHIVO:*/
-    const fileName = 'prueba.pdf'
 
-    const ruta = path.join(__dirname, `../files/${fileName}`);
+    /* Verifica que el examen se encuentre en un estado completado */
+    const examen = await Examen.findById(id);
+    if (examen.estado == 'Pendiente') {
+        return res.status(200).json({ msg: `El examen con id ${id} continua en estado Pendiente` });
+    }
 
-    if (!fs.existsSync(ruta)) {
-        res.status(200).json({ 'msg': 'NO SE ENCONTRO EL ARCHIVO', ruta });
-        return;
+    /** Si esta completado, se envia */
+    // console.log(examen);
+    const fecha = examen.fechaRealizado;
+    const idExamen = examen.idExamen;
+    const carpeta = `../files/${fecha.getFullYear()}/${fecha.getMonth()}`;
+
+    /* OBTENER NOMBRE DE ARCHIVO:*/
+    var nombreArchivo = `${idExamen}.pdf`;
+    var rutaArchivo = path.join(__dirname, `${carpeta}/${idExamen}.pdf`);//'prueba.pdf'
+
+    /** SINO EXISTE EL ARCHIVO SE ENVIA PRUEBA.PDF POR DEFECTO */
+    if (!fs.existsSync(rutaArchivo)) {
+        rutaArchivo = path.join(__dirname, `../files/prueba.pdf`);
+        nombreArchivo = 'prueba.pdf';
     }
 
     // ENVIAR ARCHIVO
@@ -45,7 +56,7 @@ const EnviarMailGet = async (req = request, res = response) => {
         }
     });
 
-    const data = await fs.readFileSync(ruta);//, 'utf8'
+    const data = await fs.readFileSync(rutaArchivo);
 
     let mail_options = {
         from: 'Sistema de consulta de mascotas',
@@ -55,7 +66,7 @@ const EnviarMailGet = async (req = request, res = response) => {
             <table border="0" cellpadding="0" cellspacing="0" width="600px" background-color="#2d3436" bgcolor="#2d3436">
                 <tr height="200px">  
                     <td bgcolor="" width="600px">
-                        <h1 style="color: #fff; text-align:center">Prueba envio de correo con archivo</h1>
+                        <h1 style="color: #fff; text-align:center">Notificación de examen con id de seguimiento '${examen._id}'</h1>
                     </td>
                 </tr>
             </table>
@@ -63,10 +74,8 @@ const EnviarMailGet = async (req = request, res = response) => {
         ,
         attachments: [
             {
-                filename: fileName,
+                filename: nombreArchivo,
                 content: data,
-                //contentType: 'application/pdf'
-                // href: ruta
             }
         ]
     };
@@ -77,7 +86,7 @@ const EnviarMailGet = async (req = request, res = response) => {
             res.json({ 'msg': 'ERROR EN EL SERVIDOR', error });
         } else {
             res.status(200);
-            res.json({ 'msg': 'Correo enviado Correctamente' });
+            res.json({ 'msg': 'Correo enviado Correctamente', rutaArchivo });
         }
     });
 }
