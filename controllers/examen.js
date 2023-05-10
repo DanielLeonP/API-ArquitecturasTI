@@ -1,10 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const PDFDocument = require('pdfkit');
+const PDFDocument = require('pdfkit-table');
 
 const { response, request } = require('express');
+
 const Examen = require('../models/examen');
 const Mascota = require('../models/mascota');
+const User = require('../models/user');
 
 const ExamenPost = async (req = request, res = response) => {
 
@@ -108,7 +110,7 @@ const ExamenPut = async (req = request, res = response) => {
 
     /* Verifica que el examen no se encuentre en un estado completado */
     const estadoExamen = await Examen.findById(id);
-    console.log(estadoExamen)
+    // console.log(estadoExamen)
     if (estadoExamen.estado == 'Completado') {
         return res.status(200).json({ msg: `El examen con id ${id} ya ha sido completado el ${estadoExamen.fechaRealizado}` });
     }
@@ -127,8 +129,47 @@ const ExamenPut = async (req = request, res = response) => {
     const doc = new PDFDocument();
     doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
     doc.fontSize(12);
-    doc.text(`El examen contiene el id ${idExamen}`);
+
+    /** CONTENIDO DEL PDF */
+
+    /** OBTENER DATOS DE LA MASCOTA */
+    const mascota = await Mascota.findById(examen.idMascota);
+    const usuario = await User.findById(mascota.idUsuario);
+    /** TABLA DE DATOS PARA PDF */
+    console.log({ examen, mascota, usuario });
+
+    doc.text(`Información del Examen`, { lineGap: 10 });
+    doc.text(`Id del examen : ${examen.idExamen}`, { lineGap: 10 });
+    doc.text(`Estado: ${examen.estado}`);
+    doc.text(`Fecha de solicitud de examen: ${examen.fechaSolicitud}`);
+    doc.text(`Tipo de Examen: ${examen.tipoExamen}`, { lineGap: 10 });
+
+    doc.text(`Información de la mascota`, { lineGap: 10 });
+    doc.text(`Nombre:  ${mascota.nombre}`);
+    doc.text(`Especie:  ${mascota.nombre}`);
+    doc.text(`Raza:  ${mascota.raza}`);
+    doc.text(`Sexo:  ${mascota.sexo}`);
+    doc.text(`MVZ:  ${mascota.mvz}`);
+    doc.text(`edad:  ${mascota.edad}`);
+    doc.text(`castrado:  ${mascota.castrado}`);
+
+    doc.text(`Informacion del usuario`, { lineGap: 10 });
+    doc.text(`Nombre:  ${usuario.nombre}`);
+    doc.text(`Correo:  ${usuario.correo}`);
+
+    let lineas = [];
+    for (let dato in datos) {
+        // console.log(`FUNCIONA ${dato}: ---  ${datos[dato]}`);
+        lineas.push([dato, datos[dato]]);
+    }
+    const table = { title: 'Resultados de examen', headers: ['Dato', 'Resultado'], rows: lineas };
+    // console.log(table);
+    // Agregar tabla al documento
+    await doc.table(table);
+
     doc.end();
+
+
 
     res.status(201);
     res.json({ 'msg': 'PUT Examen de mascota', examen });
