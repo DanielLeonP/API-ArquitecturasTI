@@ -115,7 +115,6 @@ const ExamenPut = async (req = request, res = response) => {
         return res.status(200).json({ msg: `El examen con id ${id} ya ha sido completado el ${estadoExamen.fechaRealizado}` });
     }
 
-
     /* Si el examen no esta completado, Busca el examen y ve si existe */
     const examen = await Examen.findByIdAndUpdate(id, { idExamen, datos, fechaRealizado, estado: 'Completado' }, { new: true });
     if (!examen) {
@@ -131,45 +130,50 @@ const ExamenPut = async (req = request, res = response) => {
     doc.fontSize(12);
 
     /** CONTENIDO DEL PDF */
-
     /** OBTENER DATOS DE LA MASCOTA */
     const mascota = await Mascota.findById(examen.idMascota);
     const usuario = await User.findById(mascota.idUsuario);
+    // console.log({ examen, mascota, usuario });
+
     /** TABLA DE DATOS PARA PDF */
-    console.log({ examen, mascota, usuario });
+    await doc.text(`Información de la mascota`, { lineGap: 10 });
+    await doc.text(`Nombre:  ${mascota.nombre}`);
+    await doc.text(`Especie:  ${mascota.nombre}`);
+    await doc.text(`Raza:  ${mascota.raza}`);
+    await doc.text(`Sexo:  ${mascota.sexo}`);
+    await doc.text(`MVZ:  ${mascota.MVZ}`);
+    await doc.text(`edad:  ${mascota.edad} años`);
+    await doc.text(`castrado:  ${mascota.castrado}`, { lineGap: 10 });
 
-    doc.text(`Información del Examen`, { lineGap: 10 });
-    doc.text(`Id del examen : ${examen.idExamen}`, { lineGap: 10 });
-    doc.text(`Estado: ${examen.estado}`);
-    doc.text(`Fecha de solicitud de examen: ${examen.fechaSolicitud}`);
-    doc.text(`Tipo de Examen: ${examen.tipoExamen}`, { lineGap: 10 });
+    await doc.text(`Informacion del usuario`, { lineGap: 10 });
+    await doc.text(`Nombre:  ${usuario.nombre}`);
+    await doc.text(`Correo:  ${usuario.correo}`, { lineGap: 10 });
 
-    doc.text(`Información de la mascota`, { lineGap: 10 });
-    doc.text(`Nombre:  ${mascota.nombre}`);
-    doc.text(`Especie:  ${mascota.nombre}`);
-    doc.text(`Raza:  ${mascota.raza}`);
-    doc.text(`Sexo:  ${mascota.sexo}`);
-    doc.text(`MVZ:  ${mascota.mvz}`);
-    doc.text(`edad:  ${mascota.edad}`);
-    doc.text(`castrado:  ${mascota.castrado}`);
+    await doc.text(`Información del Examen`, { lineGap: 10 });
+    await doc.text(`Id del examen : ${examen.idExamen}`);
+    await doc.text(`Estado: ${examen.estado}`);
+    await doc.text(`Fecha de solicitud de examen: ${examen.fechaSolicitud}`);
+    await doc.text(`Tipo de Examen: ${examen.tipoExamen}`, { lineGap: 10 });
 
-    doc.text(`Informacion del usuario`, { lineGap: 10 });
-    doc.text(`Nombre:  ${usuario.nombre}`);
-    doc.text(`Correo:  ${usuario.correo}`);
-
-    let lineas = [];
     for (let dato in datos) {
-        // console.log(`FUNCIONA ${dato}: ---  ${datos[dato]}`);
-        lineas.push([dato, datos[dato]]);
+        let objeto = datos[dato];
+        // console.log(objeto)
+        if (typeof datos[dato] === 'object') {//typeof objeto === 'object'
+            let lineas = [];
+            for (let info in objeto) {
+                lineas.push([info, objeto[info]]);
+            }
+            const table = { headers: [dato, 'Valor'], rows: lineas };
+            await doc.table(table);
+        } else {
+            const table = { headers: ['', ''], rows: [[dato, datos[dato]]] };
+            // console.log(table)
+            await doc.table(table);
+            // doc.text(`${dato}: ${datos[dato]}`, { lineGap: 10 });
+
+        }
     }
-    const table = { title: 'Resultados de examen', headers: ['Dato', 'Resultado'], rows: lineas };
-    // console.log(table);
-    // Agregar tabla al documento
-    await doc.table(table);
-
     doc.end();
-
-
 
     res.status(201);
     res.json({ 'msg': 'PUT Examen de mascota', examen });
