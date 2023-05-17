@@ -127,7 +127,6 @@ const ExamenPut = async (req = request, res = response) => {
     /* GENERAR PDF */
     const doc = new PDFDocument();
     doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
-    doc.fontSize(12);
 
     /** CONTENIDO DEL PDF */
     /** OBTENER DATOS DE LA MASCOTA */
@@ -136,25 +135,45 @@ const ExamenPut = async (req = request, res = response) => {
     // console.log({ examen, mascota, usuario });
 
     /** TABLA DE DATOS PARA PDF */
-    await doc.text(`Información de la mascota`, { lineGap: 10 });
-    await doc.text(`Nombre:  ${mascota.nombre}`);
-    await doc.text(`Especie:  ${mascota.nombre}`);
-    await doc.text(`Raza:  ${mascota.raza}`);
-    await doc.text(`Sexo:  ${mascota.sexo}`);
-    await doc.text(`MVZ:  ${mascota.MVZ}`);
-    await doc.text(`edad:  ${mascota.edad} años`);
-    await doc.text(`castrado:  ${mascota.castrado}`, { lineGap: 10 });
+    doc.image(path.join(__dirname, '../public/images/FacultadCN.png'), 0, 15, { width: 598, align: 'center' });
 
-    await doc.text(`Informacion del usuario`, { lineGap: 10 });
-    await doc.text(`Nombre:  ${usuario.nombre}`);
-    await doc.text(`Correo:  ${usuario.correo}`, { lineGap: 10 });
+    doc.fontSize(20);
+    doc.font('Times-Bold');
+    doc.moveDown(2);
+    await doc.text(`Resultado ${examen.tipoExamen}`, { align: 'center', lineGap: 10 });
 
-    await doc.text(`Información del Examen`, { lineGap: 10 });
+    doc.fontSize(14);
+
+    doc.font('Times-Bold');
+    await doc.text(`Información del Examen`, { align: 'center', lineGap: 10 });
+    doc.font('Times-Roman');
     await doc.text(`Id del examen : ${examen.idExamen}`);
     await doc.text(`Estado: ${examen.estado}`);
     await doc.text(`Fecha de solicitud de examen: ${examen.fechaSolicitud}`);
+    await doc.text(`Fecha de respuesta de examen: ${examen.fechaRealizado}`);
     await doc.text(`Tipo de Examen: ${examen.tipoExamen}`, { lineGap: 10 });
 
+    await doc.text(`Información de la mascota`, { align: 'center', lineGap: 10 });
+    doc.font('Times-Roman');
+    await doc.text(`Nombre:  ${mascota.nombre}`);
+    await doc.text(`Especie:  ${mascota.especie}`);
+    await doc.text(`Raza:  ${mascota.raza}`);
+    await doc.text(`Sexo:  ${mascota.sexo}`);
+    await doc.text(`MVZ:  ${mascota.MVZ}`);
+    await doc.text(`Edad:  ${mascota.edad} años`);
+    await doc.text(`Castrado:  ${mascota.castrado}`, { lineGap: 10 });
+
+    doc.font('Times-Bold');
+    await doc.text(`Informacion del usuario`, { align: 'center', lineGap: 10 });
+    doc.font('Times-Roman');
+    await doc.text(`Nombre:  ${usuario.nombre}`);
+    await doc.text(`Correo:  ${usuario.correo}`, { lineGap: 10 });
+
+
+
+    doc.addPage();
+    doc.font('Times-Bold');
+    doc.moveDown(1);
     for (let dato in datos) {
         let objeto = datos[dato];
         // console.log(objeto)
@@ -172,6 +191,7 @@ const ExamenPut = async (req = request, res = response) => {
             // doc.text(`${dato}: ${datos[dato]}`, { lineGap: 10 });
 
         }
+        doc.moveDown(1);
     }
     doc.end();
 
