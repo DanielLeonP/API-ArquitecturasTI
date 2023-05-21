@@ -125,87 +125,81 @@ const ExamenPut = async (req = request, res = response) => {
     /* SI EXISTE, CONTINUA... */
 
     /* GENERAR PDF */
-    const doc = new PDFDocument();
-    doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
 
-    /** CONTENIDO DEL PDF */
-    /** OBTENER DATOS DE LA MASCOTA */
-    const mascota = await Mascota.findById(examen.idMascota);
-    const usuario = await User.findById(mascota.idUsuario);
-    // console.log({ examen, mascota, usuario });
+    try {
+        const doc = new PDFDocument();
+        doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
 
-    /** TABLA DE DATOS PARA PDF */
-    doc.image(path.join(__dirname, '../public/images/FacultadCN.png'), 0, 15, { width: 598, align: 'center' });
+        /** CONTENIDO DEL PDF */
+        /** OBTENER DATOS DE LA MASCOTA */
+        const mascota = await Mascota.findById(examen.idMascota);
+        const usuario = await User.findById(mascota.idUsuario);
+        // console.log({ examen, mascota, usuario });
 
-    doc.fontSize(20);
-    doc.font('Times-Bold');
-    doc.moveDown(2);
-    await doc.text(`Resultado ${examen.tipoExamen}`, { align: 'center', lineGap: 10 });
+        /** TABLA DE DATOS PARA PDF */
+        doc.image(path.join(__dirname, '../public/images/FacultadCN.png'), 0, 15, { width: 598, align: 'center' });
 
-    doc.fontSize(14);
+        doc.fontSize(20);
+        doc.font('Times-Bold');
+        doc.moveDown(2);
+        await doc.text(`Resultado ${examen.tipoExamen}`, { align: 'center', lineGap: 10 });
 
-    doc.font('Times-Bold');
-    await doc.text(`Información del Examen`, { align: 'center', lineGap: 10 });
-    doc.font('Times-Roman');
-    await doc.text(`Id del examen : ${examen.idExamen}`);
-    await doc.text(`Estado: ${examen.estado}`);
-    await doc.text(`Fecha de solicitud de examen: ${examen.fechaSolicitud}`);
-    await doc.text(`Fecha de respuesta de examen: ${examen.fechaRealizado}`);
-    await doc.text(`Tipo de Examen: ${examen.tipoExamen}`, { lineGap: 10 });
+        doc.fontSize(16);
 
-    doc.font('Times-Bold');
-    await doc.text(`Información de la mascota`, { align: 'center', lineGap: 10 });
-    doc.font('Times-Roman');
-    await doc.text(`Nombre:  ${mascota.nombre}`);
-    await doc.text(`Especie:  ${mascota.especie}`);
-    await doc.text(`Raza:  ${mascota.raza}`);
-    await doc.text(`Sexo:  ${mascota.sexo}`);
-    await doc.text(`MVZ:  ${mascota.MVZ}`);
-    await doc.text(`Edad:  ${mascota.edad} años`);
-    await doc.text(`Castrado:  ${mascota.castrado}`, { lineGap: 10 });
+        doc.font('Times-Bold');
+        await doc.text(`Información del Examen`, { align: 'center', lineGap: 10 });
+        doc.font('Times-Roman');
+        await doc.text(`Id del examen : ${examen.idExamen}`);
+        await doc.text(`Estado: ${examen.estado}`);
+        await doc.text(`Fecha de solicitud de examen: ${examen.fechaSolicitud}`);
+        await doc.text(`Fecha de respuesta de examen: ${examen.fechaRealizado}`);
+        await doc.text(`Tipo de Examen: ${examen.tipoExamen}`, { lineGap: 10 });
 
-    doc.font('Times-Bold');
-    await doc.text(`Informacion del usuario`, { align: 'center', lineGap: 10 });
-    doc.font('Times-Roman');
-    await doc.text(`Nombre:  ${usuario.nombre}`);
-    await doc.text(`Correo:  ${usuario.correo}`, { lineGap: 10 });
+        doc.font('Times-Bold');
+        await doc.text(`Información de la mascota`, { align: 'center', lineGap: 10 });
+        doc.font('Times-Roman');
+        await doc.text(`Nombre:  ${mascota.nombre}`);
+        await doc.text(`Especie:  ${mascota.especie}`);
+        await doc.text(`Raza:  ${mascota.raza}`);
+        await doc.text(`Sexo:  ${mascota.sexo}`);
+        await doc.text(`MVZ:  ${mascota.MVZ}`);
+        await doc.text(`Edad:  ${mascota.edad} años`);
+        await doc.text(`Castrado:  ${mascota.castrado}`, { lineGap: 10 });
 
+        doc.font('Times-Bold');
+        await doc.text(`Informacion del usuario`, { align: 'center', lineGap: 10 });
+        doc.font('Times-Roman');
+        await doc.text(`Nombre:  ${usuario.nombre}`);
+        await doc.text(`Correo:  ${usuario.correo}`, { lineGap: 10 });
 
-
-    doc.addPage();
-    doc.font('Times-Bold');
-    doc.moveDown(1);
-    for (let dato in datos) {
-        let objeto = datos[dato];
-        // console.log(objeto)
-        if (typeof datos[dato] === 'object') {//typeof objeto === 'object'
-            let lineas = [];
-            for (let info in objeto) {
-                lineas.push([info, objeto[info]]);
-            }
-            const table = { headers: [dato, 'Valor'], rows: lineas };
-            await doc.table(table);
-        } else {
-            const table = { headers: ['', ''], rows: [[dato, datos[dato]]] };
-            // console.log(table)
-            await doc.table(table);
-            // , {
-            //     prepareHeader: () => doc.font("Helvetica-Bold").fontSize(8),
-            //     prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-            //       doc.font("Helvetica").fontSize(8);
-            //       indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15);
-            //     }
-
-            // doc.text(`${dato}: ${datos[dato]}`, { lineGap: 10 });
-
-        }
+        doc.addPage();
+        doc.font('Times-Bold');
         doc.moveDown(1);
+        for (let dato in datos) {
+            let objeto = datos[dato];
+            // console.log(objeto)
+            if (typeof datos[dato] === 'object') {//typeof objeto === 'object'
+                let lineas = [];
+                for (let info in objeto) {
+                    lineas.push([info, objeto[info]]);
+                }
+                const table = { headers: [dato, 'Valor'], rows: lineas };
+                await doc.table(table);
+            } else {
+                const table = { headers: ['', ''], rows: [[dato, datos[dato]]] };
+                // console.log(table)
+                await doc.table(table);
+            }
+            doc.moveDown(1);
+        }
+        doc.end();
+
+        res.status(201);
+        res.json({ 'msg': 'PUT Examen de mascota', examen });
+    } catch (error) {
+        res.status(201);
+        res.json({ 'msg': 'PUT Registro exitoso, pero el PDF no se pudo generar', error });
     }
-    doc.end();
-
-    res.status(201);
-    res.json({ 'msg': 'PUT Examen de mascota', examen });
-
 }
 
 
