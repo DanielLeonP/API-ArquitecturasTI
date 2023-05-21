@@ -204,7 +204,7 @@ const ExamenPut = async (req = request, res = response) => {
         res.json({ 'msg': 'PUT Examen de mascota', examen });
     } catch (error) {
         res.status(201);
-        res.json({ 'msg': 'PUT Registro exitoso, pero el PDF no se pudo generar', error });
+        res.json({ 'msg': 'PUT Registro exitoso, pero el PDF no se pudo generar', examen });
     }
 }
 
