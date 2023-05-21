@@ -92,19 +92,23 @@ const ExamenPut = async (req = request, res = response) => {
     const fechaActual = new Date();
     const anioActual = fechaActual.getFullYear();
     const mesActual = fechaActual.getMonth();
+    let numExam = 0;
+    try {
+        const carpetaAnio = path.join(__dirname, `../files/${anioActual}`);
+        const carpetaMes = path.join(__dirname, `../files/${anioActual}/${mesActual}`);
+        if (!fs.existsSync(carpetaAnio)) {
+            fs.mkdirSync(carpetaAnio);
+        }
+        if (!fs.existsSync(carpetaMes)) {
+            fs.mkdirSync(carpetaMes);
+        }
 
-    const carpetaAnio = path.join(__dirname, `../files/${anioActual}`);
-    const carpetaMes = path.join(__dirname, `../files/${anioActual}/${mesActual}`);
-    if (!fs.existsSync(carpetaAnio)) {
-        fs.mkdirSync(carpetaAnio);
-    }
-    if (!fs.existsSync(carpetaMes)) {
-        fs.mkdirSync(carpetaMes);
-    }
+        const files = fs.readdirSync(carpetaMes);
+        const cantidadArchivos = files.length;
+        numExam = cantidadArchivos + 1;
+    } catch (error) {
 
-    const files = fs.readdirSync(carpetaMes);
-    const cantidadArchivos = files.length;
-    const numExam = cantidadArchivos + 1;
+    }
 
     const idExamen = `Ex${numExam}-${mesActual}-${anioActual}`;
 
@@ -195,7 +199,7 @@ const ExamenPut = async (req = request, res = response) => {
         doc.end();
 
         doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
-        
+
         res.status(201);
         res.json({ 'msg': 'PUT Examen de mascota', examen });
     } catch (error) {
