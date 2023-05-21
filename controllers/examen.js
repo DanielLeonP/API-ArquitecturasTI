@@ -153,6 +153,7 @@ const ExamenPut = async (req = request, res = response) => {
     await doc.text(`Fecha de respuesta de examen: ${examen.fechaRealizado}`);
     await doc.text(`Tipo de Examen: ${examen.tipoExamen}`, { lineGap: 10 });
 
+    doc.font('Times-Bold');
     await doc.text(`Información de la mascota`, { align: 'center', lineGap: 10 });
     doc.font('Times-Roman');
     await doc.text(`Nombre:  ${mascota.nombre}`);
@@ -188,6 +189,13 @@ const ExamenPut = async (req = request, res = response) => {
             const table = { headers: ['', ''], rows: [[dato, datos[dato]]] };
             // console.log(table)
             await doc.table(table);
+            // , {
+            //     prepareHeader: () => doc.font("Helvetica-Bold").fontSize(8),
+            //     prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+            //       doc.font("Helvetica").fontSize(8);
+            //       indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15);
+            //     }
+
             // doc.text(`${dato}: ${datos[dato]}`, { lineGap: 10 });
 
         }

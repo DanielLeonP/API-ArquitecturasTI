@@ -19,6 +19,23 @@ const userPost = async (req = request, res = response) => {
     res.json({ 'msg': 'POST api', user });
 }
 
+const veterinariosGet = async (req = request, res = response) => {
+
+    const { limit = 50, desde = 0 } = req.query;
+    const query = { rol: 'VETERINARIO_ROLE' };
+
+    const [total, veterinarios] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
+        User.countDocuments(query), //Cantidad de registros en BD
+        User.find(query)//Se pueden enviar condiciones
+            .limit(Number(limit))
+            .skip(Number(desde))
+    ]);
+
+    res.status(201);
+    res.json({ 'msg': 'GET veterinarios', total, veterinarios });
+}
+
 module.exports = {
-    userPost
+    userPost,
+    veterinariosGet
 }
