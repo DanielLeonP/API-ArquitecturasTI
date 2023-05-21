@@ -128,7 +128,7 @@ const ExamenPut = async (req = request, res = response) => {
 
     try {
         const doc = new PDFDocument();
-        doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
+
 
         /** CONTENIDO DEL PDF */
         /** OBTENER DATOS DE LA MASCOTA */
@@ -194,6 +194,8 @@ const ExamenPut = async (req = request, res = response) => {
         }
         doc.end();
 
+        doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
+        
         res.status(201);
         res.json({ 'msg': 'PUT Examen de mascota', examen });
     } catch (error) {
