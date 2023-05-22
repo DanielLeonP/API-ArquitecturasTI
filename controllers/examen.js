@@ -208,10 +208,28 @@ const ExamenPut = async (req = request, res = response) => {
     }
 }
 
+const MasInfoExamenGet = async (req = request, res = response) => {
+    const { idExamen } = req.params;
+
+    const examen = await Examen.findById(idExamen);
+
+    if (examen == null) {
+        res.status(200).json({ 'msg': `No se encontro examen con id ${idExamen}` });
+        return;
+    }
+
+    const mascota = await Mascota.findById(examen.idMascota);
+    const usuario = await User.findById(mascota.idUsuario);
+
+
+    res.status(200);
+    res.json({ 'msg': 'GET informacion de examen, mascota y usuario', examen, mascota, usuario });
+}
 
 module.exports = {
     ExamenPost,
     ExamenesByMascotaGet,
     ExamenesGet,
-    ExamenPut
+    ExamenPut,
+    MasInfoExamenGet
 }

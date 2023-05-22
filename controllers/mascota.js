@@ -1,5 +1,6 @@
 const { response, request } = require('express');
 const Mascota = require('../models/mascota');
+const Examen = require('../models/examen');
 
 const MascotaPost = async (req = request, res = response) => {
     const { _id } = req.user;
@@ -19,6 +20,8 @@ const MascotaPost = async (req = request, res = response) => {
 
 const MascotaGet = async (req = request, res = response) => {
 
+    console.log(req.user );
+
     const { id } = req.params;
     const mascota = await Mascota.findById(id);
 
@@ -27,7 +30,7 @@ const MascotaGet = async (req = request, res = response) => {
         return;
     }
 
-    if (mascota.idUsuario.toString() != req.user._id.toString()) {
+    if (mascota.idUsuario.toString() != req.user._id.toString() && req.user.rol !== 'VETERINARIO_ROLE') {
         res.status(200).json({ 'msg': `El usuario no cuenta con una mascota con id ${id}` });
         return;
     }
@@ -55,9 +58,34 @@ const MascotasByUserGet = async (req = request, res = response) => {
     res.json({ 'msg': 'GET mascotas de un usuario', total, mascotas });
 }
 
+const MascotasXEstadoGet = async (req = request, res = response) => {
+    const { estado } = req.params;
+
+    const { limit = 50, desde = 0 } = req.query;
+
+    const query = { estado };
+
+    let examenes = await Examen.find(query).select('idMascota')//Se pueden enviar condiciones
+        .limit(Number(limit))
+        .skip(Number(desde));
+
+
+    let mascotas = []
+    for (let i = 0; i < examenes.length; i++) {
+        const mascota = await Mascota.findById(examenes[i].idMascota);
+        mascotas.push(mascota);
+
+    }
+    const total = mascotas.length;
+
+    res.status(200);
+    res.json({ 'msg': `GET Mascotas que tienen examen con estado '${estado}'`, total, mascotas });
+}
+
 
 module.exports = {
     MascotaPost,
     MascotaGet,
     MascotasByUserGet,
+    MascotasXEstadoGet
 }

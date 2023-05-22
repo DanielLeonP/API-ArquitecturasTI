@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 
 const validarCampos = require('../midlewares/validar-campos');
-const { MascotaPost, MascotaGet, MascotasByUserGet } = require('../controllers/mascota');
+const { MascotaPost, MascotaGet, MascotasByUserGet, MascotasXEstadoGet } = require('../controllers/mascota');
 const { existeUsuarioPorId, existeMascotaPorId } = require('../helpers/db-validators');
 const { validarJWT } = require('../midlewares/validarJWT');
 
@@ -40,6 +40,14 @@ router.get('/usuario/',
         validarCampos
     ],
     MascotasByUserGet);
+
+// OBTENER MASCOTAS que tienen algun examen con estado 'Pendiente' o 'Completado'
+router.get('/estado/:estado',
+    [
+        validarJWT,
+        validarCampos
+    ],
+    MascotasXEstadoGet);
 
 
 module.exports = router;
