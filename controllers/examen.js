@@ -70,20 +70,22 @@ const ExamenesGet = async (req = request, res = response) => {
 
     const query = { estado };
 
-    let [total, examenes] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
+    const [total, examenes] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
         Examen.countDocuments(query), //Cantidad de registros en BD
         Examen.find(query)//Se pueden enviar condiciones
             .limit(Number(limit))
             .skip(Number(desde))
     ]);
 
+    let examenesInfo = [];
     for (let i = 0; i < examenes.length; i++) {
-        examenes[i].mascota = await Mascota.findById(examenes[i].idMascota);
-        examenes[i].usuario = await User.findById(examenes[i].mascota.idUsuario);
-
+        let examen = examenes[i];
+        let mascota = await Mascota.findById(examenes[i].idMascota);
+        let usuario = await User.findById(examenes[i].mascota.idUsuario);
+        examenesInfo.push({ examen, mascota, usuario })
     }
     res.status(200);
-    res.json({ 'msg': `GET examenes por estado '${estado}'`, total, examenes });
+    res.json({ 'msg': `GET examenes por estado '${estado}'`, total, examenes: examenesInfo });
 }
 
 const ExamenPut = async (req = request, res = response) => {
