@@ -1,7 +1,7 @@
 const { response, request } = require('express');
 const Examen = require('../models/examen');
 const User = require('../models/user');
-const Examen = require('../models/examen');
+const Mascota = require('../models/mascota');
 
 const nodemailer = require('nodemailer');
 const fs = require('fs');
