@@ -70,13 +70,18 @@ const ExamenesGet = async (req = request, res = response) => {
 
     const query = { estado };
 
-    const [total, examenes] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
+    let [total, examenes] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
         Examen.countDocuments(query), //Cantidad de registros en BD
         Examen.find(query)//Se pueden enviar condiciones
             .limit(Number(limit))
             .skip(Number(desde))
     ]);
 
+    for (let i = 0; i < examenes.length; i++) {
+        examenes[i].mascota = await Mascota.findById(examenes[i].idMascota);
+        examenes[i].usuario = await User.findById(examenes[i].mascota.idUsuario);
+
+    }
     res.status(200);
     res.json({ 'msg': `GET examenes por estado '${estado}'`, total, examenes });
 }

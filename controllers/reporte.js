@@ -1,5 +1,7 @@
 const { response, request } = require('express');
 const Examen = require('../models/examen');
+const User = require('../models/user');
+const Examen = require('../models/examen');
 
 const nodemailer = require('nodemailer');
 const fs = require('fs');
@@ -21,7 +23,7 @@ const ReporteGet = async (req = request, res = response) => {
 }
 
 const EnviarMailGet = async (req = request, res = response) => {
-    const { correo, id } = req.body;
+    const { id } = req.params;
 
     // AQUI SE REALIZA BUSQUEDA DEL DE PDF
 
@@ -30,6 +32,8 @@ const EnviarMailGet = async (req = request, res = response) => {
     if (examen.estado == 'Pendiente') {
         return res.status(200).json({ msg: `El examen con id ${id} continua en estado Pendiente` });
     }
+    const mascota = await Mascota.findById(examen.idMascota);
+    const usuario = await User.findById(mascota.idUsuario);
 
     /** Si esta completado, se envia */
     // console.log(examen);
@@ -60,7 +64,7 @@ const EnviarMailGet = async (req = request, res = response) => {
 
     let mail_options = {
         from: 'Sistema de consulta de mascotas',
-        to: correo,
+        to: usuario.correo,
         subject: 'Sistema de consulta de mascotas',
         html: `
             <table border="0" cellpadding="0" cellspacing="0" width="600px" background-color="#2d3436" bgcolor="#2d3436">

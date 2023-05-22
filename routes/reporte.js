@@ -19,11 +19,10 @@ router.get('/', //Pendiente o Completado
     ]
     , ReporteGet);
 
-router.get('/enviarCorreo/', //Pendiente o Completado
+router.get('/enviarCorreo/:id', //Pendiente o Completado
     [
         validarJWT,
         esVeterinario,
-        check('correo', 'El correo es obligatorio').not().isEmpty(),//.isEmail(),
         check('id', 'El id (id del examen) es obligatorio').not().isEmpty(),
         validarCampos
     ]
