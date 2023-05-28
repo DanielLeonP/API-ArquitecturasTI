@@ -20,7 +20,7 @@ const MascotaPost = async (req = request, res = response) => {
 
 const MascotaGet = async (req = request, res = response) => {
 
-    console.log(req.user );
+    console.log(req.user);
 
     const { id } = req.params;
     const mascota = await Mascota.findById(id);
@@ -82,10 +82,27 @@ const MascotasXEstadoGet = async (req = request, res = response) => {
     res.json({ 'msg': `GET Mascotas que tienen examen con estado '${estado}'`, total, mascotas });
 }
 
+const TodasMascotasGet = async (req = request, res = response) => {
+
+    const { limit = 100, desde = 0 } = req.query;
+
+    const query = {};
+
+    const [total, mascotas] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
+        Mascota.countDocuments(query), //Cantidad de registros en BD
+        Mascota.find(query)//Se pueden enviar condiciones
+            .limit(Number(limit))
+            .skip(Number(desde))
+    ]);
+
+    res.status(200);
+    res.json({ 'msg': 'GET todas las mascotas', total, mascotas });
+}
 
 module.exports = {
     MascotaPost,
     MascotaGet,
     MascotasByUserGet,
-    MascotasXEstadoGet
+    MascotasXEstadoGet,
+    TodasMascotasGet
 }
