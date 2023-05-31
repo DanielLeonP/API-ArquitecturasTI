@@ -99,10 +99,24 @@ const TodasMascotasGet = async (req = request, res = response) => {
     res.json({ 'msg': 'GET todas las mascotas', total, mascotas });
 }
 
+const mascotaDelete = async (req = request, res = response) => {
+    const { idMascota } = req.params;
+
+    // Eliminar de la BD
+    const mascota = await Mascota.findByIdAndDelete(idMascota);
+
+    if(mascota){
+        res.json({ 'msg': `DELETE mascota con id ${idMascota} eliminada.`, mascota });
+    }else{
+        res.json({ 'msg': `DELETE NO se encontro mascota con  id ${idMascota}.` });
+    }
+}
+
 module.exports = {
     MascotaPost,
     MascotaGet,
     MascotasByUserGet,
     MascotasXEstadoGet,
-    TodasMascotasGet
+    TodasMascotasGet,
+    mascotaDelete
 }

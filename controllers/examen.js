@@ -233,10 +233,25 @@ const MasInfoExamenGet = async (req = request, res = response) => {
     res.json({ 'msg': 'GET informacion de examen, mascota y usuario', examen, mascota, usuario });
 }
 
+const examenDelete = async (req = request, res = response) => {
+    const { idExamen } = req.params;
+
+    // Eliminar de la BD
+    const examen = await Examen.findByIdAndDelete(idExamen);
+
+
+    if (examen) {
+        res.json({ 'msg': `DELETE examen con id ${idExamen} eliminado.`, examen });
+    } else {
+        res.json({ 'msg': `DELETE NO se encontro examen con  id ${idExamen}.` });
+    }
+}
+
 module.exports = {
     ExamenPost,
     ExamenesByMascotaGet,
     ExamenesGet,
     ExamenPut,
-    MasInfoExamenGet
+    MasInfoExamenGet,
+    examenDelete
 }

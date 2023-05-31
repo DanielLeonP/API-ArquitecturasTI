@@ -35,7 +35,21 @@ const veterinariosGet = async (req = request, res = response) => {
     res.json({ 'msg': 'GET veterinarios', total, veterinarios });
 }
 
+const userDelete = async (req = request, res = response) => {
+    const { idUsuario } = req.params;
+
+    // Eliminar de la BD
+    const user = await User.findByIdAndDelete(idUsuario);
+
+    if (user) {
+        res.json({ 'msg': `DELETE usuario con id ${idUsuario} eliminado.`, user });
+    } else {
+        res.json({ 'msg': `DELETE NO se encontro usuario con  id ${idUsuario}.` });
+    }
+}
+
 module.exports = {
     userPost,
-    veterinariosGet
+    veterinariosGet,
+    userDelete
 }

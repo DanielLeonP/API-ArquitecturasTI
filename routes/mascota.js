@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 
 const validarCampos = require('../midlewares/validar-campos');
-const { MascotaPost, MascotaGet, MascotasByUserGet, MascotasXEstadoGet, TodasMascotasGet } = require('../controllers/mascota');
+const { MascotaPost, MascotaGet, MascotasByUserGet, MascotasXEstadoGet, TodasMascotasGet, mascotaDelete } = require('../controllers/mascota');
 const { existeUsuarioPorId, existeMascotaPorId } = require('../helpers/db-validators');
 const { validarJWT } = require('../midlewares/validarJWT');
 
@@ -57,5 +57,12 @@ router.get('/',
     ],
     TodasMascotasGet);
 
+router.delete('/:idMascota',
+    [
+        check('idMascota', 'id no es un ID válido').isMongoId(),
+        validarJWT,
+        validarCampos
+    ],
+    mascotaDelete);
 
 module.exports = router;
