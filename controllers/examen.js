@@ -81,7 +81,7 @@ const ExamenesGet = async (req = request, res = response) => {
     for (let i = 0; i < examenes.length; i++) {
         let examen = examenes[i];
         let mascota = await Mascota.findById(examenes[i].idMascota);
-        let usuario = await User.findById(mascota.idUsuario);
+        let usuario = await User.findById(examenes[i].idMascota.idUsuario);
         examenesInfo.push({ examen, mascota, usuario })
     }
     res.status(200);
