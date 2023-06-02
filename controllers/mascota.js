@@ -103,13 +103,17 @@ const mascotaDelete = async (req = request, res = response) => {
     const { idMascota } = req.params;
 
     // Eliminar de la BD
+    const examenes = await Examen.deleteMany({ idMascota });
+
     const mascota = await Mascota.findByIdAndDelete(idMascota);
 
-    if(mascota){
-        res.json({ 'msg': `DELETE mascota con id ${idMascota} eliminada.`, mascota });
-    }else{
+
+    if (mascota) {
+        res.json({ 'msg': `DELETE mascota con id ${idMascota} eliminada.`, mascota, examenesEliminados: examenes });
+    } else {
         res.json({ 'msg': `DELETE NO se encontro mascota con  id ${idMascota}.` });
     }
+
 }
 
 module.exports = {

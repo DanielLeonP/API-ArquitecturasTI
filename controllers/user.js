@@ -1,6 +1,8 @@
 const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
 const User = require('../models/user');
+const Mascota = require('../models/mascota');
+const Examen = require('../models/examen');
 
 const userPost = async (req = request, res = response) => {
 
@@ -39,10 +41,20 @@ const userDelete = async (req = request, res = response) => {
     const { idUsuario } = req.params;
 
     // Eliminar de la BD
+    const mascotas = await Mascota.find({ idUsuario });
+
+    let examenesEliminados = 0;
+    for (let i = 0; i < mascotas.length; i++) {
+        // console.log(mascotas[i]);
+        const examenes = await Examen.deleteMany({ idMascota: mascotas[i]._id });
+        examenesEliminados = examenesEliminados + examenes.deletedCount;
+    }
+    const mascotasEliminadas = await Mascota.deleteMany({ idUsuario });
+
     const user = await User.findByIdAndDelete(idUsuario);
 
     if (user) {
-        res.json({ 'msg': `DELETE usuario con id ${idUsuario} eliminado.`, user });
+        res.json({ 'msg': `DELETE usuario con id ${idUsuario} eliminado.`, user, mascotasEliminadas: mascotasEliminadas.deletedCount, examenesEliminados });
     } else {
         res.json({ 'msg': `DELETE NO se encontro usuario con  id ${idUsuario}.` });
     }
