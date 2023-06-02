@@ -23,9 +23,10 @@ class Server {
         await dbConection();
     }
     midlewares() {
-        this.app.use(express.urlencoded({ extended: true }));
         // CORS
         this.app.use(cors());
+
+        this.app.use(express.urlencoded({ extended: true }));
         // Public Directory
         this.app.use(express.static('public'));
         // Body Parser 
