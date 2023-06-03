@@ -52,6 +52,7 @@ const MascotasByUserGet = async (req = request, res = response) => {
         Mascota.find(query)//Se pueden enviar condiciones
             .limit(Number(limit))
             .skip(Number(desde))
+            .sort({nombre: 1})
     ]);
 
     res.status(200);
@@ -67,8 +68,8 @@ const MascotasXEstadoGet = async (req = request, res = response) => {
 
     let examenes = await Examen.find(query).select('idMascota')//Se pueden enviar condiciones
         .limit(Number(limit))
-        .skip(Number(desde));
-
+        .skip(Number(desde))
+        .sort({fechaRealizado: -1});
 
     let mascotas = []
     for (let i = 0; i < examenes.length; i++) {
@@ -93,6 +94,7 @@ const TodasMascotasGet = async (req = request, res = response) => {
         Mascota.find(query)//Se pueden enviar condiciones
             .limit(Number(limit))
             .skip(Number(desde))
+            .sort({nombre: 1})
     ]);
 
     res.status(200);

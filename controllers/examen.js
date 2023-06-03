@@ -73,6 +73,7 @@ const ExamenesGet = async (req = request, res = response) => {
     const [total, examenes] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
         Examen.countDocuments(query), //Cantidad de registros en BD
         Examen.find(query)//Se pueden enviar condiciones
+            .sort({fechaSolicitud: 1})
             .limit(Number(limit))
             .skip(Number(desde))
     ]);
@@ -89,6 +90,7 @@ const ExamenesGet = async (req = request, res = response) => {
 }
 
 const ExamenPut = async (req = request, res = response) => {
+
     let { datos } = req.body;
     const { id } = req.params;
     const fechaRealizado = new Date();
@@ -100,9 +102,9 @@ const ExamenPut = async (req = request, res = response) => {
     const anioActual = fechaActual.getFullYear();
     const mesActual = fechaActual.getMonth();
     let numExam = 0;
+    const carpetaAnio = path.join(__dirname, `../files/${anioActual}`);
+    const carpetaMes = path.join(__dirname, `../files/${anioActual}/${mesActual}`);
     try {
-        const carpetaAnio = path.join(__dirname, `../files/${anioActual}`);
-        const carpetaMes = path.join(__dirname, `../files/${anioActual}/${mesActual}`);
         if (!fs.existsSync(carpetaAnio)) {
             fs.mkdirSync(carpetaAnio);
         }
@@ -114,7 +116,7 @@ const ExamenPut = async (req = request, res = response) => {
         const cantidadArchivos = files.length;
         numExam = cantidadArchivos + 1;
     } catch (error) {
-
+        console.log(error);
     }
 
     const idExamen = `Ex${numExam}-${mesActual}-${anioActual}`;
@@ -136,16 +138,16 @@ const ExamenPut = async (req = request, res = response) => {
     /* SI EXISTE, CONTINUA... */
 
     /* GENERAR PDF */
-
+    console.log('Generando PDF ------------');
     try {
         const doc = new PDFDocument();
 
-
+        doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
         /** CONTENIDO DEL PDF */
         /** OBTENER DATOS DE LA MASCOTA */
         const mascota = await Mascota.findById(examen.idMascota);
         const usuario = await User.findById(mascota.idUsuario);
-        // console.log({ examen, mascota, usuario });
+        console.log({ examen, mascota, usuario });
 
         /** TABLA DE DATOS PARA PDF */
         doc.image(path.join(__dirname, '../public/images/FacultadCN.png'), 0, 15, { width: 598, align: 'center' });
@@ -205,11 +207,14 @@ const ExamenPut = async (req = request, res = response) => {
         }
         doc.end();
 
-        doc.pipe(fs.createWriteStream(`${carpetaMes}/${idExamen}.pdf`));
+
+
+        console.log('PDF Realizado ------------');
 
         res.status(201);
         res.json({ 'msg': 'PUT Examen de mascota', examen });
     } catch (error) {
+        console.log(error)
         res.status(201);
         res.json({ 'msg': 'PUT Registro exitoso, pero el PDF no se pudo generar', examen });
     }

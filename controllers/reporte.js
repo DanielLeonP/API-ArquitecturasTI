@@ -10,13 +10,8 @@ const ReporteGet = async (req = request, res = response) => {
 
     const [total, examenes] = await Promise.all([ //resp es una coleccion de 2 promesas, se desestructura en 2 arreglos
         Examen.countDocuments(), //Cantidad de registros en BD
-        Examen.find()//Se pueden enviar condiciones
+        Examen.find().sort({fechaRealizado: -1})//Se pueden enviar condiciones
     ]);
-
-
-
-    /*AQUI SE REALIZA LA TABLA DONDE CONTIENE TODOS Y CADA UNO DE LOS EXAMENES REALIZADOS*/
-
 
     res.status(200);
     res.json({ 'msg': 'GET generar reporte', total, examenes });
