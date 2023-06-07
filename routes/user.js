@@ -9,7 +9,7 @@ const { validarJWT } = require('../midlewares/validarJWT');
 
 const router = Router();
 
-// REGISTRAR USUARIO
+//Ruta para registrar un usuario
 router.post('/',
     [
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
@@ -22,6 +22,7 @@ router.post('/',
     ],
     userPost);
 
+// Ruta para obtener todos los veterinarios
 router.get('/veterinarios',
     [
         validarJWT,
@@ -29,6 +30,7 @@ router.get('/veterinarios',
     ],
     veterinariosGet);
 
+// Ruta para eliminar usuario por ID
 router.delete('/:idUsuario',
     [
         check('idUsuario', 'id no es un ID válido').isMongoId(),

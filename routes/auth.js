@@ -5,7 +5,7 @@ const validarCampos = require('../midlewares/validar-campos');
 
 const router = Router();
 
-// LOGIN - OBTENER TOKEN
+// Ruta para iniciar sesion - Generar token como respuesta si los datos son correctos
 router.post('/login',
     [
         check('correo', ' EL correo es obligatorio').isEmail(),

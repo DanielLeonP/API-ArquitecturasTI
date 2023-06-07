@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
+// Configuracion para conexion a la base de datos
 const dbConection = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_CNN, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            // useCreateIndex: true,
-            // useFindAndModify: false
         });
         console.log('Conectado a la base de datos');
     } catch (error) {

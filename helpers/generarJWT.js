@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 
+// Generar el token que se le asigna a un usuario
 const generarJWT = (uid = '') => {
     return new Promise((resolve, reject) => {
         const payload = { uid } //Dentro de {} se pueden guardar los valores que quieras

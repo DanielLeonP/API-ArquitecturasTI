@@ -1,4 +1,6 @@
 const { Schema, model } = require('mongoose');
+
+// Esquema de una mascota
 const MascotaSchema = Schema({
     fechaRegistro: {
         type: Date,

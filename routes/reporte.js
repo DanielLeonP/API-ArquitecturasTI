@@ -10,8 +10,8 @@ const { esVeterinario } = require('../midlewares/validar-roles');
 const router = Router();
 
 
-// VETERINARIO - Reporte
-router.get('/', //Pendiente o Completado
+//Ruta para obtener el listado de examenes para el reporte -  Solo para VETERINARIO
+router.get('/',
     [
         validarJWT,
         esVeterinario,
@@ -19,7 +19,8 @@ router.get('/', //Pendiente o Completado
     ]
     , ReporteGet);
 
-router.get('/enviarCorreo/:id', //Pendiente o Completado
+// Ruta que permite realizar el envio de correo al usuario que solicito un examen
+router.get('/enviarCorreo/:id',
     [
         validarJWT,
         esVeterinario,

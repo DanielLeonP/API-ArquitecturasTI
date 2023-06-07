@@ -1,5 +1,6 @@
 const { request, response } = require("express")
 
+// Validar que el rol que tiene el usuario es Admin
 const esAdminRole = (req = request, res = response, next) => {
     if (!req.user) {
         return res.status(500).json({ msg: 'Se quiere verificar el role sin validar el token primero' });
@@ -11,6 +12,8 @@ const esAdminRole = (req = request, res = response, next) => {
     }
     next();
 }
+
+// Validar que el rol que tiene el usuario es veterinario
 const esVeterinario = (req = request, res = response, next) => {
     if (!req.user) {
         return res.status(500).json({ msg: 'Se quiere verificar el role sin validar el token primero' });
@@ -22,6 +25,8 @@ const esVeterinario = (req = request, res = response, next) => {
     }
     next();
 }
+
+// Validar el rol del usuario
 const tieneRole = (...roles) => { //Operador rest (...)
     return (req = request, res = response, next) => {
         if (!req.user) {

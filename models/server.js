@@ -3,6 +3,7 @@ const cors = require('cors');
 const { dbConection } = require('../database/config');
 const app = express()
 
+// Configuracion de servidor
 class Server {
     constructor() {
         this.app = express();

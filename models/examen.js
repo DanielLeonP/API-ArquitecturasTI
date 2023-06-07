@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 
+// Esquema de un examen
 const ExamenSchema = Schema({
     idExamen: {
         type: String//,

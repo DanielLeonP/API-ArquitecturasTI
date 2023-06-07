@@ -9,7 +9,7 @@ const { validarJWT } = require('../midlewares/validarJWT');
 
 const router = Router();
 
-// REGISTRAR MASCOTA
+//Ruta para registrar nueva mascota
 router.post('/',
     [
         validarJWT,
@@ -24,7 +24,7 @@ router.post('/',
     ],
     MascotaPost);
 
-// OBTENER UNA MASCOTA POR ID
+//Ruta para obtener mascota por ID
 router.get('/id/:id',
     [
         validarJWT,
@@ -33,7 +33,7 @@ router.get('/id/:id',
     ],
     MascotaGet);
 
-// OBTENER MASCOTAS DE UN USAURIO
+//Ruta para obtener mascotas de un usuario
 router.get('/usuario/',
     [
         validarJWT,
@@ -41,7 +41,7 @@ router.get('/usuario/',
     ],
     MascotasByUserGet);
 
-// OBTENER MASCOTAS que tienen algun examen con estado 'Pendiente' o 'Completado'
+// Ruta para obtener mascotas que tienen algun examen con estado 'Pendiente' o 'Completado'
 router.get('/estado/:estado',
     [
         validarJWT,
@@ -49,7 +49,7 @@ router.get('/estado/:estado',
     ],
     MascotasXEstadoGet);
 
-// OBTENER MASCOTAS que tienen algun examen con estado 'Pendiente' o 'Completado'
+//Ruta para obtener mascota que tienen algun examen con estado 'Pendiente' o 'Completado', ademas de sus examenes y usuario
 router.get('/',
     [
         validarJWT,
@@ -57,6 +57,7 @@ router.get('/',
     ],
     TodasMascotasGet);
 
+// Ruta para eliminar mascota por ID
 router.delete('/:idMascota',
     [
         check('idMascota', 'id no es un ID válido').isMongoId(),

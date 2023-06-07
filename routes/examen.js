@@ -9,7 +9,7 @@ const { esVeterinario } = require('../midlewares/validar-roles');
 
 const router = Router();
 
-// REALIZAR EXAMEN
+// Ruta para registrar un nuevo examen
 router.post('/',
     [
         validarJWT,
@@ -20,7 +20,7 @@ router.post('/',
     ]
     , ExamenPost);
 
-// OBTENER EXAMENES DE UNA MASCOTA
+// Ruta para obtener examenes de una mascota
 router.get('/:id',
     [
         validarJWT,
@@ -30,7 +30,7 @@ router.get('/:id',
     , ExamenesByMascotaGet);
 
 
-// VETERINARIO - Obtener todos los examenes pendientes y completados
+// Ruta para obtener todos los examenes pendientes y completados - solo para VETERINARIO
 router.get('/listado/:estado', //Pendiente o Completado
     [
         validarJWT,
@@ -39,8 +39,8 @@ router.get('/listado/:estado', //Pendiente o Completado
     ]
     , ExamenesGet);
 
-// VETERINARIO - RESPONDER EXAMEN
-router.put('/:id', //Pendiente o Completado
+//Ruta para dar respuesta a un examen - Solo para VETERINARIO
+router.put('/:id',
     [
         validarJWT,
         esVeterinario,
@@ -50,8 +50,7 @@ router.put('/:id', //Pendiente o Completado
     ]
     , ExamenPut);
 
-
-// VETERINARIO - Obtener mas informacion del examen, mascota y usuario
+//Ruta para obtener mas informacion del examen, mascota y usuario - Solo para VETERINARIO
 router.get('/informacion/:idExamen', //Pendiente o Completado
     [
         validarJWT,
@@ -60,6 +59,7 @@ router.get('/informacion/:idExamen', //Pendiente o Completado
     ]
     , MasInfoExamenGet);
 
+// Ruta para eliminar un examen por ID
 router.delete('/:idExamen',
     [
         check('idExamen', 'id no es un ID válido').isMongoId(),
